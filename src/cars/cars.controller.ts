@@ -9,13 +9,14 @@ import {
   Delete,
   HttpStatus,
   Body,
-} from '@nestjs/common';
-import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { CarService } from './cars.service';
-import { CreateCarDto } from './dto/cars.dto';
+} from "@nestjs/common";
+import { ApiTags, ApiParam } from "@nestjs/swagger";
+import { CarService } from "./cars.service";
+import { CreateCarDto } from "./dto/cars.dto";
 
-@ApiTags('Cars')
-@Controller('cars')
+
+@ApiTags("Cars")
+@Controller("cars")
 export class CarsController {
   constructor(private readonly carService: CarService) {}
 
@@ -23,11 +24,11 @@ export class CarsController {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   async getCarsList() {}
 
-  @Get('/:carBrand')
+  @Get("/:carBrand")
   async getCar(
     @Req() req: any,
     @Res() res: any,
-    @Param('carBrand') carBrand: string,
+    @Param("carBrand") carBrand: string
   ) {
     console.log(carBrand);
     return res
@@ -39,18 +40,18 @@ export class CarsController {
   async createCar(
     @Req() req: any,
     @Body() body: CreateCarDto,
-    @Res() res: any,
+    @Res() res: any
   ) {
     return res
       .status(HttpStatus.CREATED)
       .json(await this.carService.createCar(body));
   }
 
-  @Delete('/:carId')
+  @Delete("/:carId")
   async deleteCar(
     @Req() req: any,
     @Res() res: any,
-    @Param('carId') carId: string,
+    @Param("carId") carId: string
   ) {
     console.log(carId);
     return res
@@ -58,13 +59,13 @@ export class CarsController {
       .json(await this.carService.deleteCar(carId));
   }
 
-  @ApiParam({ name: 'id', required: true })
-  @Patch('/:carId')
+  @ApiParam({ name: "id", required: true })
+  @Patch("/:carId")
   async updateCar(
     @Req() req: any,
     @Res() res: any,
     @Body() body: CreateCarDto,
-    @Param('carId') carId: any,
+    @Param("carId") carId: any
   ) {
     console.log(carId);
     return res

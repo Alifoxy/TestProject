@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { User } from "@prisma/client";
 
-import { CreateUserDto } from './dto/user.dto';
-import { PrismaService } from '../core/orm/prisma.service';
+import { CreateUserDto } from "./dto/user.dto";
+import { PrismaService } from "../core/orm/prisma.service";
 
 @Injectable()
 export class UsersService {
@@ -23,7 +23,7 @@ export class UsersService {
   async getUserList(): Promise<User[]> {
     return this.prismaService.user.findMany({
       orderBy: {
-        name: 'asc',
+        name: "asc",
       },
       take: 5,
     });
@@ -43,7 +43,7 @@ export class UsersService {
 
   async deleteUser(id: string) {}
 
-  async findUserByEmail(userEmail: string) {
+  async findOne(userEmail: string) {
     return this.prismaService.user.findFirst({
       where: { email: userEmail },
     });

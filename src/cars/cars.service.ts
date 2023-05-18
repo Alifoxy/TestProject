@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCarDto } from './dto/cars.dto';
-import { PrismaService } from '../core/orm/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { CreateCarDto } from "./dto/cars.dto";
+import { PrismaService } from "../core/orm/prisma.service";
 
 @Injectable()
 export class CarService {
@@ -24,7 +24,7 @@ export class CarService {
 
   async getCar(brand: string) {
     const car = this.cars.find(
-      (item: { brand: string }) => item.brand === brand,
+      (item: { brand: string }) => item.brand === brand
     );
     return this.cars;
   }
