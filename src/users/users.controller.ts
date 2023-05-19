@@ -13,21 +13,21 @@ import {
   Res,
   UploadedFile,
   UseInterceptors,
-} from '@nestjs/common';
-import { CreateUserDto } from './dto/user.dto';
-import { UsersService } from './users.service';
+} from "@nestjs/common";
+import { CreateUserDto } from "./dto/user.dto";
+import { CreateCarDto } from "../cars/dto/cars.dto";
+import { UsersService } from "./users.service";
+import { CarService } from "../cars/cars.service";
 import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+} from "@nestjs/swagger";
 
-@ApiTags('Users')
-@Controller('users')
+@ApiTags("Users")
+@Controller("users")
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
@@ -36,12 +36,12 @@ export class UsersController {
     return res.status(HttpStatus.OK).json(await this.userService.getUserList());
   }
 
-  @ApiParam({ name: 'userId', required: true })
-  @Get('/:userId')
+  @ApiParam({ name: "userId", required: true })
+  @Get("/:userId")
   async getUserInfo(
     @Req() req: any,
     @Res() res: any,
-    @Param('userId') userId: string,
+    @Param("userId") userId: string
   ) {
     return res
       .status(HttpStatus.OK)
@@ -52,18 +52,18 @@ export class UsersController {
   async createUser(
     @Req() req: any,
     @Body() body: CreateUserDto,
-    @Res() res: any,
+    @Res() res: any
   ) {
     return res
       .status(HttpStatus.CREATED)
       .json(await this.userService.createUser(body));
   }
 
-  @Delete('/:userId')
+  @Delete("/:userId")
   async deleteUser(
     @Req() req: any,
     @Res() res: any,
-    @Param('userId') userId: string,
+    @Param("userId") userId: string
   ) {
     console.log(userId);
     return res
@@ -71,12 +71,30 @@ export class UsersController {
       .json(await this.userService.deleteUser(userId));
   }
 
-  @ApiParam({ name: 'userId', required: true })
-  @Patch('/:userId')
+  @ApiParam({ name: "userId", required: true })
+  @Patch("/:userId")
   async updateUser(
     @Req() req: any,
     @Res() res: any,
-    @Param('userId') userId: string,
+    @Param("userId") userId: string
     // eslint-disable-next-line @typescript-eslint/no-empty-function
   ) {}
+
+  @Post("/cars/:userId")
+  async addNewCar(
+    @Req() req: any,
+    @Res() res: any,
+    @Body() body: CreateCarDto,
+    @Param("userId") userId: string
+  ) {
+    const user = await this.userService.getUserById(userId);
+    if (!user) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: `User with id: ${userId} not fount` });
+    }
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.CarService.createCar(body, userId));
+  }
 }

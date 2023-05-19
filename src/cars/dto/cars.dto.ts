@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsNotEmpty, IsOptional } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsString, IsNumber, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateCarDto {
   @ApiProperty()
@@ -17,6 +17,10 @@ export class CreateCarDto {
   @IsOptional()
   year: number | undefined;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  image: string | undefined;
+
   @ApiProperty({ required: true })
   @IsNumber()
   @IsNotEmpty()
@@ -31,5 +35,5 @@ export class CreateCarDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  seller: string | undefined;
+  sellerName: string | undefined;
 }

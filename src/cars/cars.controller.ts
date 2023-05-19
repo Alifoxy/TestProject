@@ -9,15 +9,19 @@ import {
   Delete,
   HttpStatus,
   Body,
+  UseInterceptors,
+  UploadedFiles,
 } from "@nestjs/common";
 import { ApiTags, ApiParam } from "@nestjs/swagger";
 import { CarService } from "./cars.service";
 import { CreateCarDto } from "./dto/cars.dto";
-
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { editFileName, imageFileFilter } from "../core/file-upload/file.upload";
 
 @ApiTags("Cars")
 @Controller("cars")
 export class CarsController {
+  private userId: string;
   constructor(private readonly carService: CarService) {}
 
   @Get()
@@ -44,7 +48,7 @@ export class CarsController {
   ) {
     return res
       .status(HttpStatus.CREATED)
-      .json(await this.carService.createCar(body));
+      .json(await this.carService.createCar(body, ));
   }
 
   @Delete("/:carId")
@@ -61,15 +65,27 @@ export class CarsController {
 
   @ApiParam({ name: "id", required: true })
   @Patch("/:carId")
+  @UseInterceptors(
+    FileFieldsInterceptor([{ name: "image", maxCount: 1 }], {
+      storage: diskStorage({
+        destination: "./public/cars",
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    })
+  )
   async updateCar(
     @Req() req: any,
+    @Body() body: any,
     @Res() res: any,
-    @Body() body: CreateCarDto,
-    @Param("carId") carId: any
+    @UploadedFiles()
+    files: { image?: Express.Multer.File[]; logo?: Express.Multer.File[] }
   ) {
-    console.log(carId);
+    if (files?.image) {
+      body.image = `/public/cars/${files.image[0].filename}`;
+    }
     return res
-      .status(HttpStatus.ACCEPTED)
-      .json(await this.carService.patch(carId, body));
+      .status(HttpStatus.OK)
+      .json(await this.carService.updateCar(body));
   }
 }

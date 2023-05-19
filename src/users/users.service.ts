@@ -41,9 +41,12 @@ export class UsersService {
     });
   }
 
-  async deleteUser(id: string) {}
+  async deleteUser(id: string) {
+    const user = this.users.find((item) => item.id === id);
+    return this.users;
+  }
 
-  async findOne(userEmail: string) {
+  async findByUsername(userEmail: string) {
     return this.prismaService.user.findFirst({
       where: { email: userEmail },
     });
