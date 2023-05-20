@@ -15,8 +15,10 @@ import {
 import { ApiTags, ApiParam } from "@nestjs/swagger";
 import { CarService } from "./cars.service";
 import { CreateCarDto } from "./dto/cars.dto";
+import { CreateUserDto } from "../users/dto/user.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { editFileName, imageFileFilter } from "../core/file-upload/file.upload";
+import { diskStorage } from "multer";
 
 @ApiTags("Cars")
 @Controller("cars")
@@ -44,11 +46,12 @@ export class CarsController {
   async createCar(
     @Req() req: any,
     @Body() body: CreateCarDto,
-    @Res() res: any
+    @Res() res: any,
+    @Param("userId") userId: string
   ) {
     return res
       .status(HttpStatus.CREATED)
-      .json(await this.carService.createCar(body, ));
+      .json(await this.carService.createCar(body, userId));
   }
 
   @Delete("/:carId")
@@ -62,7 +65,6 @@ export class CarsController {
       .status(HttpStatus.OK)
       .json(await this.carService.deleteCar(carId));
   }
-
   @ApiParam({ name: "id", required: true })
   @Patch("/:carId")
   @UseInterceptors(
@@ -78,8 +80,9 @@ export class CarsController {
     @Req() req: any,
     @Body() body: any,
     @Res() res: any,
+    @Param("carId") carId: any,
     @UploadedFiles()
-    files: { image?: Express.Multer.File[]; logo?: Express.Multer.File[] }
+    files: { image?: Express.Multer.File[] }
   ) {
     if (files?.image) {
       body.image = `/public/cars/${files.image[0].filename}`;

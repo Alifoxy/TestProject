@@ -12,34 +12,36 @@ export class CreateUserDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  name!: string;
+  name: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  password!: string;
+  password: string;
 
   @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()
-  age!: number;
+  age: number;
 
   @ApiProperty({ required: true, example: "user@mail.com" })
   @IsString()
   @IsEmail()
   // @Matches('')
   @IsNotEmpty()
-  email!: string;
+  email: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
   // @IsEnum(CityEnum)
-  city!: string;
+  city: string;
 
   @ApiProperty()
   @IsBoolean()
   @IsOptional()
-  premium!: boolean;
+  premium: boolean;
+
+  isAdmin: boolean;
 }

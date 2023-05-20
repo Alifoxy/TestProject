@@ -5,35 +5,35 @@ export class CreateCarDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  model: string | undefined;
+  model: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  brand: string | undefined;
+  brand: string;
 
   @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()
-  year: number | undefined;
+  year: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  image: string | undefined;
+  image: string;
 
   @ApiProperty({ required: true })
   @IsNumber()
   @IsNotEmpty()
-  price: number | undefined;
+  price: number;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   // @IsEnum(CityEnum)
-  city: string | undefined;
+  city: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  sellerName: string | undefined;
+  sellerName: string;
 }

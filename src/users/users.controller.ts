@@ -11,25 +11,21 @@ import {
   Post,
   Req,
   Res,
-  UploadedFile,
-  UseInterceptors,
 } from "@nestjs/common";
 import { CreateUserDto } from "./dto/user.dto";
 import { CreateCarDto } from "../cars/dto/cars.dto";
 import { UsersService } from "./users.service";
 import { CarService } from "../cars/cars.service";
-import {
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiParam, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Users")
 @Controller("users")
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    @Inject(forwardRef(() => CarService))
+    private readonly carsService: CarService
+  ) {}
 
   @Get()
   async getUsersList(@Req() req: any, @Res() res: any) {
@@ -38,7 +34,7 @@ export class UsersController {
 
   @ApiParam({ name: "userId", required: true })
   @Get("/:userId")
-  async getUserInfo(
+  async getById(
     @Req() req: any,
     @Res() res: any,
     @Param("userId") userId: string
@@ -52,7 +48,7 @@ export class UsersController {
   async createUser(
     @Req() req: any,
     @Body() body: CreateUserDto,
-    @Res() res: any
+    @Res() res: any,
   ) {
     return res
       .status(HttpStatus.CREATED)
@@ -91,10 +87,10 @@ export class UsersController {
     if (!user) {
       return res
         .status(HttpStatus.NOT_FOUND)
-        .json({ message: `User with id: ${userId} not fount` });
+        .json({ message: `User with id: ${userId} not found` });
     }
     return res
       .status(HttpStatus.OK)
-      .json(await this.CarService.createCar(body, userId));
+      .json(await this.carsService.createCar(body, userId));
   }
 }
