@@ -7,6 +7,7 @@ import {
   IsString,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { Permission } from "../../core/enums/permission.enum";
 
 export class CreateUserDto {
   @ApiProperty()
@@ -41,7 +42,12 @@ export class CreateUserDto {
   @ApiProperty()
   @IsBoolean()
   @IsOptional()
-  premium: boolean;
+  isPremium: boolean;
 
+  permissions: Permission[];
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
   isAdmin: boolean;
 }

@@ -1,5 +1,6 @@
 import { SetMetadata } from "@nestjs/common";
-import { Delete } from "../core/enums/delete.permission.enum";
+import { Permission } from "../core/enums/permission.enum";
+
 export const PERMISSIONS_KEY = "permissions";
-export const Permissions = (...permissions: Delete[]) =>
+export const RequirePermissions = (...permissions: Permission[]) =>
   SetMetadata(PERMISSIONS_KEY, permissions);

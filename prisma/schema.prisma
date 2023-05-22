@@ -21,7 +21,7 @@ model User {
   cars     Cars[]
 }
 
-model Cars {
+model Car {
   id       Int @id @default(autoincrement())
   model    String
   brand    String?

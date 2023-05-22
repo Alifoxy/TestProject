@@ -1,5 +1,6 @@
 export enum Permission {
-  CreateCar = "CreateCar",
-  DeleteCar = "DeleteCar",
-  UpdateCar = "UpdateCar",
+  Create = "CreateCar",
+  Delete = "DeleteCar",
+  Update = "UpdateCar",
+  Read = "Read",
 }

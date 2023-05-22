@@ -15,10 +15,11 @@ import {
 import { ApiTags, ApiParam } from "@nestjs/swagger";
 import { CarService } from "./cars.service";
 import { CreateCarDto } from "./dto/cars.dto";
-import { CreateUserDto } from "../users/dto/user.dto";
+import { RequirePermissions } from "../permissions/permissions.decorator";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { editFileName, imageFileFilter } from "../core/file-upload/file.upload";
 import { diskStorage } from "multer";
+import { Permission } from "../core/enums/permission.enum";
 
 @ApiTags("Cars")
 @Controller("cars")
@@ -27,10 +28,14 @@ export class CarsController {
   constructor(private readonly carService: CarService) {}
 
   @Get()
+  @RequirePermissions(Permission.Read)
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async getCarsList() {}
+  async findMany(@Req() req: any, @Res() res: any) {
+    return res.status(HttpStatus.OK).json(await this.carService.getCarsList(cars));
+  }
 
   @Get("/:carBrand")
+  @RequirePermissions(Permission.Read)
   async getCar(
     @Req() req: any,
     @Res() res: any,
@@ -39,10 +44,11 @@ export class CarsController {
     console.log(carBrand);
     return res
       .status(HttpStatus.FOUND)
-      .json(await this.carService.getCar(carBrand));
+      .json(await this.carService.getCarByBrand(carBrand));
   }
 
   @Post()
+  @RequirePermissions(Permission.Create)
   async createCar(
     @Req() req: any,
     @Body() body: CreateCarDto,
@@ -55,6 +61,7 @@ export class CarsController {
   }
 
   @Delete("/:carId")
+  @RequirePermissions(Permission.Delete)
   async deleteCar(
     @Req() req: any,
     @Res() res: any,
@@ -65,8 +72,10 @@ export class CarsController {
       .status(HttpStatus.OK)
       .json(await this.carService.deleteCar(carId));
   }
+
   @ApiParam({ name: "id", required: true })
   @Patch("/:carId")
+  @RequirePermissions(Permission.Create)
   @UseInterceptors(
     FileFieldsInterceptor([{ name: "image", maxCount: 1 }], {
       storage: diskStorage({

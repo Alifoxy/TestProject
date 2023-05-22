@@ -1,14 +1,8 @@
-import {
-  Injectable,
-  forwardRef,
-  HttpException,
-  HttpStatus,
-  Inject,
-} from "@nestjs/common";
+import { Injectable, forwardRef, Inject, Res, Req } from "@nestjs/common";
 import { CreateCarDto } from "./dto/cars.dto";
 import { PrismaService } from "../core/orm/prisma.service";
 import { UsersService } from "../users/users.service";
-
+import { Cars } from "@prisma/client";
 @Injectable()
 export class CarService {
   constructor(
@@ -57,12 +51,23 @@ export class CarService {
   }
 
   async deleteCar(id: string) {
-    const car = this.cars.find((item: { id: string }) => item.id === id);
+    const car = this.prismaService.cars.find(
+      (item: { id: string }) => item.id === id
+    );
     return this.cars;
   }
 
-  async getCar(brand: string) {
-    const car = this.cars.find(
+  async getCarsList(): Promise<Cars[]> {
+    return this.prismaService.cars.findMany({
+      orderBy: {
+        name: "asc",
+      },
+      take: 5,
+    });
+  }
+
+  async getCarByBrand(brand: string) {
+    const car = this.prismaService.cars.find(
       (item: { brand: string }) => item.brand === brand
     );
     return this.cars;

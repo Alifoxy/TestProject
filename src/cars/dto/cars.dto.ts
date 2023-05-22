@@ -17,8 +17,6 @@ export class CreateCarDto {
   @IsOptional()
   year: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
   image: string;
 
   @ApiProperty({ required: true })
